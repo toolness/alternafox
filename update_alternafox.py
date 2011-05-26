@@ -9,7 +9,10 @@ import time
 
 import version_comparator
 
-AURORA_INDEX_URL = "http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-mozilla-aurora/"
+index_urls = {
+    'Aurora': "http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-mozilla-aurora/",
+    'Nightly': "TODO"
+}
 
 class FtpIndexPageHtmlParser(HTMLParser.HTMLParser):
     file_re = re.compile(r'firefox-(.+)\.en-US\.mac\.dmg')
@@ -92,5 +95,24 @@ def download_and_install(fileobj, volume_name):
     os.unlink(dmg_name)
 
 if __name__ == '__main__':
-    download = open('/Users/atul/Downloads/firefox-5.0a2.en-US.mac.dmg', 'rb')
-    download_and_install(download, 'Aurora')
+    if len(sys.argv) < 2 or len(sys.argv) > 3:
+        print "usage: %s [dmg-path] aurora|nightly"
+        sys.exit(1)
+    if len(sys.argv) == 2:
+        dmg_path = None
+        volume_name = sys.argv[1]
+    elif len(sys.argv) == 3:
+        dmg_path = os.path.expanduser(sys.argv[1])
+        volume_name = sys.argv[2]
+    volume_name = volume_name.capitalize()
+    if volume_name not in index_urls:
+        print "unknown alternafox: %s" % volume_name
+        sys.exit(1)
+    if dmg_path:
+        download = open(dmg_path, 'rb')
+    else:
+        print "finding latest version of %s" % volume_name
+        url = find_latest_version_url(index_urls[volume_name])
+        print "retrieving %s" % url
+        download = urllib2.urlopen(url)
+    download_and_install(download, volume_name)
