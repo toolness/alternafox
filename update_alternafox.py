@@ -72,12 +72,21 @@ def unmount(volume_name):
         print "something weird happened, forcing unmount."
         subprocess.check_call(['/usr/sbin/diskutil', 'unmount', 'force', path])
 
+def get_app_dir(volume_name):
+    return '/Applications/%s.app' % volume_name
+
+def is_app_running(volume_name):
+    app_dir = get_app_dir(volume_name)
+    p = subprocess.Popen(['/bin/ps', '-ef'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    return (app_dir in out)
+
 def download_and_install(fileobj, volume_name):
     dmg_name = '%s.dmg' % volume_name
     download_and_mount_dmg(fileobj, dmg_name, volume_name)
 
     src_dir = '/Volumes/%s/%s.app' % (volume_name, volume_name)
-    app_dir = '/Applications/%s.app' % volume_name
+    app_dir = get_app_dir(volume_name)
     if os.path.exists(app_dir):
         print "deleting old app at %s" % app_dir
         shutil.rmtree(app_dir)
@@ -96,7 +105,7 @@ def download_and_install(fileobj, volume_name):
     
     print "Congratulations, you've got a new browser at %s." % app_dir
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) < 2 or len(sys.argv) > 3:
         print "usage: %s [dmg-path] aurora|nightly"
         sys.exit(1)
@@ -110,6 +119,10 @@ if __name__ == '__main__':
     if volume_name not in index_urls:
         print "unknown alternafox: %s" % volume_name
         sys.exit(1)
+    if is_app_running(volume_name):
+        print "The %s browser is currently running." % volume_name
+        print "Please close it first."
+        sys.exit(1)
     if dmg_path:
         download = open(dmg_path, 'rb')
     else:
@@ -118,3 +131,6 @@ if __name__ == '__main__':
         print "retrieving %s" % url
         download = urllib2.urlopen(url)
     download_and_install(download, volume_name)
+    
+if __name__ == '__main__':
+    main()
