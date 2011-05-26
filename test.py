@@ -1,6 +1,6 @@
 import unittest
 
-from update_aurora_and_nightly import *
+from update_alternafox import *
 
 def get_sample_aurora_feed():
     p = FtpIndexPageHtmlParser()
