@@ -1,6 +1,8 @@
 import unittest
+import doctest
 
 from update_alternafox import *
+import version_comparator
 
 def get_sample_aurora_feed():
     p = FtpIndexPageHtmlParser()
@@ -32,4 +34,19 @@ class Tests(unittest.TestCase):
         self.assertEqual(hack_application_ini(orig, 'Aurora'), expected)
 
 if __name__ == '__main__':
-    unittest.main()
+    tests = []
+    loader = unittest.TestLoader()
+    module = __import__('__main__')
+    suite = loader.loadTestsFromModule(module)
+    for test in suite:
+        tests.append(test)
+
+    finder = doctest.DocTestFinder()
+    doctests = finder.find(version_comparator)
+    for test in doctests:
+        if len(test.examples) > 0:
+            tests.append(doctest.DocTestCase(test))
+
+    suite = unittest.TestSuite(tests)
+    runner = unittest.TextTestRunner(verbosity=2)
+    runner.run(suite)
