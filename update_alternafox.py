@@ -93,6 +93,8 @@ def download_and_install(fileobj, volume_name):
     unmount(volume_name)
     print "deleting %s" % dmg_name
     os.unlink(dmg_name)
+    
+    print "Congratulations, you've got a new browser at %s." % app_dir
 
 if __name__ == '__main__':
     if len(sys.argv) < 2 or len(sys.argv) > 3:
