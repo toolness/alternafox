@@ -23,5 +23,10 @@ class Tests(unittest.TestCase):
         url = find_latest_version_url('http://foo.com/', fake_urlopen)
         self.assertEqual(url, 'http://foo.com/firefox-6.0a2.en-US.mac.dmg')
 
+    def test_hack_application_ini(self):
+        orig = '; hi\n\n[App]\nName=Firefox\n'
+        expected = '; hi\n\n[App]\nName=Aurora\n'
+        self.assertEqual(hack_application_ini(orig, 'Aurora'), expected)
+
 if __name__ == '__main__':
     unittest.main()
