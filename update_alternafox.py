@@ -11,7 +11,7 @@ import version_comparator
 
 index_urls = {
     'Aurora': "http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-mozilla-aurora/",
-    'Nightly': "TODO"
+    'Nightly': "http://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-trunk/"
 }
 
 class FtpIndexPageHtmlParser(HTMLParser.HTMLParser):
