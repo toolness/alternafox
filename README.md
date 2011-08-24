@@ -6,11 +6,12 @@ These browsers are fully compatible with [Choosy][].
 
 ## Usage
 
-1. Download the [update_alternafox.py][] script to your desktop.
+1. Open Terminal and run the following command to download the [update_alternafox.py][] script to your home directory:
 
-2. Open Terminal and run the following commands:
+        curl https://raw.github.com/toolness/alternafox/master/update_alternafox.py > update_alternafox.py
 
-        cd ~/Desktop
+2. Run the following command:
+
         python update_alternafox.py aurora
     
 The above command will automatically download and install the latest version of Aurora as a separate browser in `/Applications/Aurora.app`. If you'd like to also get Nightly, run:
